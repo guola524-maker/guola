@@ -1,95 +1,95 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>数据号生成器</title>
-<script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+！doctype.！doctype超文本标记语言>超文本标记语言>
+<超文本标记语言 朗="zh-CN">HTML lang="zh-CN">
+<头>头>
+<元 字符集="UTF-8">元charset="UTF-8">
+<元 姓名="视口"内容="宽度=设备宽度，初始比例=1.0，最大比例=1.0，用户可缩放=无，视口适配=盖">元名称=“视口”content="width=设备宽度，初始比例=1.0，最大比例=1.0，用户可缩放=无，viewport-fit=cover">
+<元 姓名="apple-mobile-web-app-capable"内容="是">元name="apple-mobile-web-app-content="yes">
+<元 姓名="apple-mobile-web-app-status-bar-style"内容="黑色-透明">元name="apple-mobile-web-app-status-bar-style"content="black-lucent">
+<标题>数字条件生成器</标题>标题>数据号生成器</标题>
+<脚本 类型="importmap"><剧本类型="导入映射">
+{
+“导入”：{
+"三"："https://unpkg.com/three@0.160.0/build/three.module.js"，
+"三个/addons/"："https://unpkg.com/three@0.160.0/examples/jsm/"
         }
     }
-</script>
-<style>
+</脚本>脚本>
+<风格>风格>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+页边距：0；边缘:0;
+填充：0；填充:0;
+框大小：边框框；箱体尺寸:边框框;
 }
-html,body{
-    height:100%;
-    overflow:hidden;
-    font-family:system-ui,"Microsoft Yahei",sans-serif;
-    color:#94C0F7;
-}
-
-#snowCanvas{
-    position:fixed;
-    inset:0;
-    z-index:-2;
+超文本标记语言，正文{,身体{
+高度：100%；高度：100%；
+溢出：隐藏；溢出:隐藏的;
+字体系列：system-ui、“微软雅黑”、白线；字体系列：system-ui，“Microsoft Yahei”，无白线；
+颜色：#94C0F7；颜色：#94C0F7；
 }
 
-.home-page{
-    width:100vw;
-    height:100vh;
-    overflow-y:auto;
-    padding:20px;
-    padding-top:32px;
-    padding-bottom:50px;
-    position:relative;
-    z-index:1;
+#snowCanvas{snowCanvas{
+位置：固定；位置:确定的;
+插图：0；插图:0;
+Z指数：-2；z指数：-2；
+}
+
+.主页{主页{
+宽度：100vw；
+高度：100vh；
+    溢流y:自动;
+填料：20px；
+顶部衬垫：32px；
+垫底：50px；
+    位置:相对的;
+Z指数：1；
     
-    transition: transform 0.42s ease-in-out;
+过渡：改变0.42s易进易出；
 }
 
-.home-page.slide-left{
-    transform: translateX(-100%);
+.主页.向左滑动{
+更改：translateX(-100%)；
 }
 
 
-.gen-panel{
-    width:100vw;
-    height:100vh;
-    overflow-y:auto;
-    padding:20px;
-    padding-top:32px;
-    padding-bottom:50px;
-    position:fixed;
-    top:0;
-    right:0;
-    z-index:10;
-    background: transparent;
-    transform: translateX(100%);
-    transition: transform 0.42s ease-in-out;
+.发电机面板{
+宽度：100vw；
+高度：100vh；
+    溢流y:自动;
+填料：20px；
+顶部衬垫：32px；
+垫底：50px；
+位置:确定的;
+顶端:0;
+正确的:0;
+Z指数：10；
+    背景: 透明的;
+改变：translateX(100%)；
+过渡：改变0.42s易进易出；
 }
-.gen-panel.active{
-    transform: translateX(0);
+.发电机面板.活跃的{
+更改：translateX(0)；
 }
 
-.splash-screen {
-    position:fixed;
-    inset:0;
-    background:#ffffff;
-    z-index:999999;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    transition:opacity 0.6s ease-out;
+.闪屏 {
+位置:确定的;
+插图:0;
+背景：#FFFFFF；
+Z指数：999999；
+显示:弯曲;
+挠曲方向:柱;
+    对齐项目:中心;
+justify-content：中心；
+过渡：不透明度0.6s缓出；
 }
-.splash-screen.fade-out {
-    opacity:0;
-    pointer-events:none;
+.闪屏.淡出 {
+    不透明度:0;
+    指针事件:没有一个;
 }
-.app-icon {
-    width:80px;
-    height:80px;
-    border-radius:18px;
-    box-shadow:0 6px 16px rgba(148,192,247,0.35);
+.应用程序图标 {
+宽度：80px；
+高度：80px；
+边界半径：18px；
+箱形阴影：06px16px RGBA(148,192,247,0.35);
     object-fit:cover;
 }
 .splash-text {
