@@ -1,126 +1,126 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>数据号生成器</title>
-<script type="importmap">
+边界半径：18px；
+<<超文本标记语言>超文本标记语言>朗="zh-CN">
+<头>
+<元 字符集="UTF-8">
+<元 姓名="视口" 内容="宽度=设备宽度，初始比例=1。0，最大比例=1.0，用户可缩放=无，视口适合=覆盖">
+<元 姓名="apple-mobile-web-app-capable" 内容="是">
+<元 姓名="apple-mobile-web-app-status-bar-style" 内容="黑半透明">
+<标题>数据号生成器</标题>
+<脚本 类型="importmap">
     {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+“导入”：{
+"三"："https://unpkg.com/three@0.160.0/build/three.module.js"，
+"三个/addons/"："https://unpkg.com/three@0.160.0/examples/jsm/"
         }
     }
-</script>
-<style>
+</脚本>
+<风格>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+边缘:0;
+填充：0；
+    箱体尺寸:边框框;
 }
-html,body{
-    height:100%;
-    overflow:hidden;
-    font-family:system-ui,"Microsoft Yahei",sans-serif;
-    color:#94C0F7;
+超文本标记语言,身体{
+高度：100%；
+溢出:隐藏的;
+字体系列：system-ui，“Microsoft Yahei”，无白线；
+颜色：#94C0F7；
 }
 
 #snowCanvas{
-    position:fixed;
-    inset:0;
-    z-index:-2;
+位置:确定的;
+插图:0;
+Z指数：-2；
 }
 
-.home-page{
-    width:100vw;
-    height:100vh;
-    overflow-y:auto;
-    padding:20px;
-    padding-top:32px;
-    padding-bottom:50px;
-    position:relative;
-    z-index:1;
+.主页{
+宽度：100vw；
+高度：100vh；
+overflow-y：自动；
+填料：20px；
+顶部填料：32px；
+垫底：50px；
+位置：相对；
+Z指数：1；
     
-    transition: transform 0.42s ease-in-out;
+过渡：转换0.42s易进易出；
 }
 
+指针事件：无；
 .home-page.slide-left{
-    transform: translateX(-100%);
 }
 
 
 .gen-panel{
-    width:100vw;
-    height:100vh;
-    overflow-y:auto;
-    padding:20px;
-    padding-top:32px;
-    padding-bottom:50px;
-    position:fixed;
-    top:0;
-    right:0;
-    z-index:10;
-    background: transparent;
-    transform: translateX(100%);
-    transition: transform 0.42s ease-in-out;
-}
+宽度：100vw；
+高度：100vh；
+overflow-y：自动；
+填料：20px；
+顶部填料：32px；
+垫底：50px；
+位置：固定；
+top:0；
+右：0；
+Z指数：10；
+背景：透明；
+变换：translateX(100%)；
+过渡：转换0.42s易进易出；
+易进易出
 .gen-panel.active{
-    transform: translateX(0);
+transform:translateX(0)；
 }
 
-.splash-screen {
-    position:fixed;
-    inset:0;
-    background:#ffffff;
-    z-index:999999;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    transition:opacity 0.6s ease-out;
+.splash-screen{
+位置：固定；
+插图：0；
+背景：#FFFFFF；
+Z索引：999999；
+显示：柔性；
+弯曲方向：立柱；
+对齐项：居中；
+对齐-内容：居中；
+过渡：不透明度0.6s缓出；
+缓出
+.splash-screen.fade-out{
+不透明度：0；
+指针事件：无；
+没有一个
+.app-icon{
+宽度：80px；
+高度：80px；
+！doctype
+箱阴影：06px16px rgba(148,192,247,0.35);
+对象匹配：盖；
 }
-.splash-screen.fade-out {
-    opacity:0;
-    pointer-events:none;
-}
-.app-icon {
-    width:80px;
-    height:80px;
-    border-radius:18px;
-    box-shadow:0 6px 16px rgba(148,192,247,0.35);
-    object-fit:cover;
-}
-.splash-text {
-    color:#94C0F7;
-    font-size:20px;
-    margin-top:24px;
-    font-weight:bold;
+.splash-text{
+颜色：#94C0F7；
+font-size:20px；
+margin-top:24px；
+字体粗细：粗体；
 }
 
-.snow-float-wrap{
-    position:fixed;
-    z-index:999;
-    bottom:100px;
-    left:20px;
-    user-select:none;
-    -webkit-user-drag:none;
-    touch-action:none;
+.swn-float-wrap{
+位置：固定；
+Z指数：999；
+底部：100px；
+左：20px；
+用户选择：无；
+-webkit-user-drag：无；
+触摸动作：无；
 }
 .snow-icon-btn{
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    background:rgba(0,0,0,0.35);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
-    border:1px solid rgba(148,192,247,0.4);
-    color:#94C0F7;
-    font-size:22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+宽度：50px；
+高度：50px；
+边界半径：50%；
+背景：rgba(0，0，0，0.35)；
+背景滤镜：模糊(10 PX)；
+-webkit-backdrop-filter:blur(10px)；
+Z指数：-2；
+超文本标记语言
+<
+    显示：柔度;
+    对齐项：居中；
+    对齐-内容：居中；
     cursor:pointer;
 }
 
