@@ -1,95 +1,95 @@
-！doctype.！doctype超文本标记语言>超文本标记语言>
-<超文本标记语言 朗="zh-CN">HTML lang="zh-CN">
-<头>头>
-<元 字符集="UTF-8">元charset="UTF-8">
-<元 姓名="视口"内容="宽度=设备宽度，初始比例=1.0，最大比例=1.0，用户可缩放=无，视口适配=盖">元名称=“视口”content="width=设备宽度，初始比例=1.0，最大比例=1.0，用户可缩放=无，viewport-fit=cover">
-<元 姓名="apple-mobile-web-app-capable"内容="是">元name="apple-mobile-web-app-content="yes">
-<元 姓名="apple-mobile-web-app-status-bar-style"内容="黑色-透明">元name="apple-mobile-web-app-status-bar-style"content="black-lucent">
-<标题>数字条件生成器</标题>标题>数据号生成器</标题>
-<脚本 类型="importmap"><剧本类型="导入映射">
-{
-“导入”：{
-"三"："https://unpkg.com/three@0.160.0/build/three.module.js"，
-"三个/addons/"："https://unpkg.com/three@0.160.0/examples/jsm/"
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>数据号生成器</title>
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
         }
     }
-</脚本>脚本>
-<风格>风格>
+</script>
+<style>
 *{
-页边距：0；边缘:0;
-填充：0；填充:0;
-框大小：边框框；箱体尺寸:边框框;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
-超文本标记语言，正文{,身体{
-高度：100%；高度：100%；
-溢出：隐藏；溢出:隐藏的;
-字体系列：system-ui、“微软雅黑”、白线；字体系列：system-ui，“Microsoft Yahei”，无白线；
-颜色：#94C0F7；颜色：#94C0F7；
-}
-
-#snowCanvas{snowCanvas{
-位置：固定；位置:确定的;
-插图：0；插图:0;
-Z指数：-2；z指数：-2；
+html,body{
+    height:100%;
+    overflow:hidden;
+    font-family:system-ui,"Microsoft Yahei",sans-serif;
+    color:#94C0F7;
 }
 
-.主页{主页{
-宽度：100vw；
-高度：100vh；
-    溢流y:自动;
-填料：20px；
-顶部衬垫：32px；
-垫底：50px；
-    位置:相对的;
-Z指数：1；
+#snowCanvas{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+}
+
+.home-page{
+    width:100vw;
+    height:100vh;
+    overflow-y:auto;
+    padding:20px;
+    padding-top:32px;
+    padding-bottom:50px;
+    position:relative;
+    z-index:1;
     
-过渡：改变0.42s易进易出；
+    transition: transform 0.42s ease-in-out;
 }
 
-.主页.向左滑动{
-更改：translateX(-100%)；
+.home-page.slide-left{
+    transform: translateX(-100%);
 }
 
 
-.发电机面板{
-宽度：100vw；
-高度：100vh；
-    溢流y:自动;
-填料：20px；
-顶部衬垫：32px；
-垫底：50px；
-位置:确定的;
-顶端:0;
-正确的:0;
-Z指数：10；
-    背景: 透明的;
-改变：translateX(100%)；
-过渡：改变0.42s易进易出；
+.gen-panel{
+    width:100vw;
+    height:100vh;
+    overflow-y:auto;
+    padding:20px;
+    padding-top:32px;
+    padding-bottom:50px;
+    position:fixed;
+    top:0;
+    right:0;
+    z-index:10;
+    background: transparent;
+    transform: translateX(100%);
+    transition: transform 0.42s ease-in-out;
 }
-.发电机面板.活跃的{
-更改：translateX(0)；
+.gen-panel.active{
+    transform: translateX(0);
 }
 
-.闪屏 {
-位置:确定的;
-插图:0;
-背景：#FFFFFF；
-Z指数：999999；
-显示:弯曲;
-挠曲方向:柱;
-    对齐项目:中心;
-justify-content：中心；
-过渡：不透明度0.6s缓出；
+.splash-screen {
+    position:fixed;
+    inset:0;
+    background:#ffffff;
+    z-index:999999;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 0.6s ease-out;
 }
-.闪屏.淡出 {
-    不透明度:0;
-    指针事件:没有一个;
+.splash-screen.fade-out {
+    opacity:0;
+    pointer-events:none;
 }
-.应用程序图标 {
-宽度：80px；
-高度：80px；
-边界半径：18px；
-箱形阴影：06px16px RGBA(148,192,247,0.35);
+.app-icon {
+    width:80px;
+    height:80px;
+    border-radius:18px;
+    box-shadow:0 6px 16px rgba(148,192,247,0.35);
     object-fit:cover;
 }
 .splash-text {
@@ -696,152 +696,152 @@ const shareTxt = `🔥↓↓和平免费数据号！↓🔥
 🌱↑↑任你选择，随心所欲↑↑🌱
 
 
-1043777306  1043777306
-1043777306  1043777306
-1043777306  1043777306
+      1043777306  1043777306
+      1043777306  1043777306
+      1043777306  1043777306
 
 
 免费数据号@TGUOLAYLW
 
-👉  数据号生成器下载链接（密码123）：
-http://b-bu.cn/b01d71d5fc';
+👉 数据号生成器下载链接（密码123）：
+http://b-bu.cn/b01d71d5fc`;
 
-让 需要=10;
-让 doneNum=0;
+let need = 10;
+let doneNum = 0;
 
-功能 updateUI(){
-  文件.getElementById("已完成").内部文本=doneNum;
-  让 PCT=(doneNum / 需要) * 100;
-  文件.getElementById("条形图").风格.宽度=PCT+"%";
+function updateUI(){
+  document.getElementById("done").innerText = doneNum;
+  let pct = (doneNum / need) * 100;
+  document.getElementById("bar").style.width = pct + "%";
 }
 
-功能 resetAll(){
-  doneNum=0;
+function resetAll(){
+  doneNum = 0;
   updateUI();
-  文件.getElementById("showNum").内部文本="先完成分享任务";
+  document.getElementById("showNum").innerText = "先完成分享任务";
 }
 updateUI();
 
-文件.getElementById("buyBtn")。onclick=功能(){
-位置.href="https://link3.cc/guola"；
+document.getElementById("buyBtn").onclick = function(){
+  location.href = "https://link3.cc/guola";
 };
 
-document.getElementById("shareBtn")。onclick=函数(){
-文件。getElementById(“模态”)。风格。显示="flex"；
+document.getElementById("shareBtn").onclick = function(){
+  document.getElementById("modal").style.display = "flex";
 };
-文件。getElementById("goShareBtn")。onclick=函数(){
-文件。getElementById(“模态”)。风格。显示="无"；
-Const textarea=document.createElement("textarea")；
-textarea.value=shareText；
-textarea.style.position="固定"；
-textarea.style.opacity="0"；
-document.body.appendChild(textarea)；
-textarea.select()；
-document.execCommand(“副本”)；
-document.body.removeChild(textarea)；
+document.getElementById("goShareBtn").onclick = function(){
+  document.getElementById("modal").style.display = "none";
+  const textarea = document.createElement("textarea");
+  textarea.value = shareTxt;
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
 
-setTimeout(()=>{
-location.href="mqq://"；
-}, 800);
-setTimeout(()=>{
-if(doneNum<需要){
-doneNum++；
-updateUI()；
-if(doneNum>=需要){
+  setTimeout(()=>{
+    location.href = "mqq://";
+  }, 800);
+  setTimeout(()=>{
+    if(doneNum < need){
+      doneNum++;
+      updateUI();
+      if(doneNum >= need){
         alert("❌ 分享任务异常，请重新分享10个不同的100人以上群聊！");
-resetAll()；
+        resetAll();
       }
     }
-}, 2800);
+  }, 2800);
 };
-document.getElementById("resetBtn")。onclick=函数(){
-resetAll()；
-警惕的("✅ 已重置，请重新开始分享任务")；
+document.getElementById("resetBtn").onclick = function(){
+  resetAll();
+  alert("✅ 已重置，请重新开始分享任务");
 };
 
-函数Rand(最小，最大){
-返回Math.floor(Math.random()*(max-min+1))+min；
+function rand(min,max){
+    return Math.floor(Math.random()*(max-min+1))+min;
 }
-函数randArr(arr){
-return arr[rand(0，arr.length-1)]；
+function randArr(arr){
+    return arr[rand(0,arr.length-1)];
 }
 
 
-const usedNameSet=新集()；
+const usedNameSet = new Set();
 
-常数CharPool=[
-"婲","玛","玥","珩","珞","宁","晞","绾","鸢","泠","柒","槿","砚","纾","昀","岑","芃","茉",
-"岚","澈","暮","辞","屿","笙","沐","柠","筱","霏","楹","诺","芮","昭","絮","忱",
-"卿","檀","绯","攸","芷","葭","霁","杳","宸","荞","茴","绾","姒","祎","琬","妤",
-"荞","荏","苒","笙","箫","砚","阡","陌","攸","泠","潋","漪","霏","霂","昉","旸"
+const charPool = [
+    "婲","瑪","玥","珩","珞","甯","晞","绾","鸢","泠","柒","槿","砚","纾","昀","岑","芃","茉",
+    "岚","澈","暮","辞","屿","笙","沐","柠","筱","霏","楹","诺","芮","昭","絮","忱",
+    "卿","檀","绯","攸","芷","葭","霁","杳","宸","荞","茴","绾","姒","祎","琬","妤",
+    "荞","荏","苒","笙","箫","砚","阡","陌","攸","泠","潋","漪","霏","霂","昉","旸"
 ];
 
 
-函数createUniqueNick(){
-让尼克；
-while(true){
-Const CHARLEN=rand(2，6)；
-设namestr=""；
-for(设i=0；i<CHARLEN；i++){
-namestr+=randArr(CharPool)；
+功能 createUniqueNick(){
+    让 尼克;
+    在……期间(正确){
+        Const 夏伦=兰德(2,6);
+        让 namestr="";
+        为(让 我=0;我<夏伦;我++){
+            namestr+=randArr(CharPool);
         }
-if(rand(1，10)<=3){
-namestr+=rand(1，9)；
+        如果(兰德(1,10)<=3){
+            namestr+=兰德(1,9);
         }
-Nick=namestr；
-if(！usedNameSet.has(nick)){
-usedNameSet.add(nick)；
-打破；
+        尼克=namestr;
+        如果(!usedNameSet.有(尼克)){
+            usedNameSet.添加(尼克);
+            打破;
         }
     }
-返回缺口；
+    返回 尼克;
 }
 
 
-函数getRandomToken(){
-Const chars="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；
-让令牌=""；
-for(让i=0；i<32；i++)token+=chars[rand(0，chars.length-1)]；
-返回令牌；
+功能 getRandomToken(){
+    Constchars="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef";
+    让令牌="";
+    为(让我=0;我<32;我++) 令牌+=chars[兰德(0,chars.长度-1)];
+    返回 令牌;
 }
 
-函数createaccount(){
-设昵称=createUniqueNick()；
-let level=rand(20，75)；
-让rankNum=rand(600，5000)；
-设markCount=rand(1，22)；
-设onlineState=rand(0，1)===1？"是"："否"；
-让hotValue=rand(1000，80000)；
+功能 createaccount(){
+    让昵称=createUniqueNick();
+    让水平=兰德(20,75);
+    让rankNum=兰德(600,5000);
+    让markCount=兰德(1,22);
+    让在线状态=兰德(0,1)===1 ? "是" : "否";
+    让hotValue=兰德(1000,80000);
 
-let day=String(rand(1，20)).padStart(2，"0")；
-让小时=字符串(rand(0，23)).padStart(2，"0")；
-让分钟=字符串(rand(0，59)).padStart(2，"0")；
-设second=String(rand(0，59)).padStart(2，"0")；
-设gapHour=rand(1，50)；
-让loginTime='2026-07-${一天}_${小时}:${分钟}:${第二}(${gapHour}小时)`;
+    让一天=线(兰德(1,20)).padStart(2,"0");
+>((超文本标记语言小时线让兰德023)).padStart(2,"0");
+    让分钟=线(兰德(0,59)).padStart(2,"0");
+    让第二=线(兰德(0,59)).padStart(2,"0");
+    让gapHour=兰德(1,50);
+    让loginTime=`2026-07-${一天}_${小时}:${分钟}:${第二}(${gapHour}小时)`;
 
-令令牌=让hotValue让hotValue=兰德(1000，80000)；rand(1000，80000)；().子字串(0，28)；
-设OpenID=getRandomToken()；
-让payToken=token；
-Constexpiretime=7776000；
+    让令牌=getRandomToken().子字串(0,28);
+    让OpenID=getRandomToken();
+    让payToken=令牌;
+    Constexpiretime=7776000;
 
-返回'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${loginTime}---正常_access_token=${令牌}&到期日(_I)=${expiredtime}OpenID(&O)=${OpenID}&pay_token=${payToken}&'；
+    返回 ‘名字：${昵称}---等级:${水平}---段位:${rankNum}---历史印记:${markCount}---在线状态:${在线状态}---热力值:${hotValue}---上次登录时间:${loginTime}---正常_access_token=${令牌}到期日(_I)(&E)=${expiretime}OpenID(&O)=${OpenID}&pay_token=${payToken}&`;
 }
 
-异步异步函数typeAppend(元素，文本，速度=15){typeAppend(元素，文本，速度=15){
-为(让我=0; 我<文本.长度; 我++){
+异步功能typeAppend(元素，文本，速度=15){
+为(让 我=0; 我<文本.长度; 我++){
         元素.内部文本+=文本[我];
-元素.卷盖=元素.scrollHeight；
+元素.卷轴=元素.scrollHeight；
 等候新的承诺(res=>setTimeout(res，速度))；
     }
 }
 
 让totalGenContent=""；
-ConstartGenBtn=文件.getElementById("startGen")；
-ConstgenResultBox=文件.getElementById("genResult")；
-ConstgenCountInput=文件.getElementById("genCount")；
-constcopyallbtn=文本.getElementById("copyAll")；
-ConstclearRecordBtn=文件.getElementById("clearRecord")；
+Const startGenBtn=文件.getElementById("startGen")；
+Const genResultBox=文件.getElementById("genResult")；
+Const genCountInput=文件.getElementById("genCount")；
+Const copyAllBtn=文件。getElementById("Copyall")；
+Const clearRecordBtn=文件.getElementById("clearRecord")；
 让genRunning=假的；
 让isStopGen=假的；
 
@@ -864,13 +864,13 @@ isStopGen=假的；
 startGenBtn.内部文本="停止生成"；
 startGenBtn.禁用=假的；
 
-为(让我=1; 我<=数数; 我++){
+为(让 我=1; 我<=数数; 我++){
        
 如果(isStopGen)打破；
 
 让singleText=createaccount()+"\n\n";
 等候typeAppend(genResultBox，singleText，15)；
-totalGenContent+=单文本；
+总GenContent+=单文本；
     }
 
    
@@ -885,7 +885,7 @@ copyAllBtn.onClick=异步功能(){
         返回;
     }
 尝试{
-等候区飞行员剪贴板.WRITETEXT(totalGenContent)；
+等候区飞行员剪贴板.WRITETEXT(总GenContent)；
 警惕的("✅ 复制成功！")；
 }赶上(犯错){
         警惕的("浏览器权限限制，请手动选中复制");
@@ -905,4 +905,4 @@ startGenBtn.禁用=假的；
 
 </剧本>
 </身体>
-<
+</超文本标记语言>
