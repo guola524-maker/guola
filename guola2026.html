@@ -1,77 +1,77 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>数据号生成器</title>
-<script type="importmap">
+<！doctype> 超文本标记语言>超文本标记语言>
+<超文本标记语言 朗="zh-CN">
+<头>
+<元 字符集="UTF-8">
+<元 姓名="视口" 内容="宽度=设备宽度，初始比例=1。0，最大比例=1.0，用户可缩放=无，视口适合=覆盖">
+<元 姓名="apple-mobile-web-app-capable" 内容="是">
+<元 姓名="apple-mobile-web-app-status-bar-style" 内容="黑半透明">
+<标题>数据号生成器</标题>
+<脚本 类型="importmap">
     {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+“导入”：{
+"三"："https://unpkg.com/three@0.160.0/build/three.module.js"，
+"三个/addons/"："https://unpkg.com/three@0.160.0/examples/jsm/"
         }
     }
-</script>
-<style>
+</脚本>
+<风格>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+边缘:0;
+填充：0；
+    箱体尺寸:边框框;
 }
-html,body{
-    height:100%;
-    overflow:hidden;
-    font-family:system-ui,"Microsoft Yahei",sans-serif;
-    color:#94C0F7;
+超文本标记语言,身体{
+高度：100%；
+溢出:隐藏的;
+字体系列：system-ui，“Microsoft Yahei”，无白线；
+颜色：#94C0F7；
 }
 
 #snowCanvas{
-    position:fixed;
-    inset:0;
-    z-index:-2;
+位置:确定的;
+插图:0;
+Z指数：-2；
 }
 
-.home-page{
-    width:100vw;
-    height:100vh;
-    overflow-y:auto;
-    padding:20px;
-    padding-top:32px;
-    padding-bottom:50px;
-    position:relative;
-    z-index:1;
+.主页{
+宽度：100vw；
+高度：100vh；
+overflow-y：自动；
+填料：20px；
+顶部填料：32px；
+垫底：50px；
+位置：相对；
+Z指数：1；
     
-    transition: transform 0.42s ease-in-out;
+过渡：转换0.42s易进易出；
 }
 
+过渡：转换0.42s易进易出；
 .home-page.slide-left{
-    transform: translateX(-100%);
 }
 
 
 .gen-panel{
-    width:100vw;
-    height:100vh;
-    overflow-y:auto;
-    padding:20px;
-    padding-top:32px;
-    padding-bottom:50px;
-    position:fixed;
-    top:0;
-    right:0;
-    z-index:10;
-    background: transparent;
-    transform: translateX(100%);
-    transition: transform 0.42s ease-in-out;
-}
+宽度：100vw；
+高度：100vh；
+overflow-y：自动；
+填料：20px；
+顶部填料：32px；
+垫底：50px；
+位置：固定；
+top:0；
+右：0；
+Z指数：10；
+背景：透明；
+变换：translateX(100%)；
+过渡：转换0.42s易进易出；
+易进易出
 .gen-panel.active{
-    transform: translateX(0);
+transform:translateX(0)；
 }
 
-.splash-screen {
-    position:fixed;
+.splash-screen{
+位置：固定；
     inset:0;
     background:#ffffff;
     z-index:999999;
