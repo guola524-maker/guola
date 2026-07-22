@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>数据号生成器</title>
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+</script>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+html,body{
+    height:100%;
+    overflow:hidden;
+    font-family:system-ui,"Microsoft Yahei",sans-serif;
+    color:#94C0F7;
+}
+
+#snowCanvas{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+}
+
+.home-page{
+    width:100vw;
+    height:100vh;
+    overflow-y:auto;
+    padding:20px;
+    padding-top:32px;
+    padding-bottom:50px;
+    position:relative;
+    z-index:1;
+    
+    transition: transform 0.42s ease-in-out;
+}
+
+.home-page.slide-left{
+    transform: translateX(-100%);
+}
+
+
+.gen-panel{
+    width:100vw;
+    height:100vh;
+    overflow-y:auto;
+    padding:20px;
+    padding-top:32px;
+    padding-bottom:50px;
+    position:fixed;
+    top:0;
+    right:0;
+    z-index:10;
+    background: transparent;
+    transform: translateX(100%);
+    transition: transform 0.42s ease-in-out;
+}
+.gen-panel.active{
+    transform: translateX(0);
+}
+
+.splash-screen {
+    position:fixed;
+    inset:0;
+    background:#ffffff;
+    z-index:999999;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 0.6s ease-out;
+}
+.splash-screen.fade-out {
+    opacity:0;
+    pointer-events:none;
+}
+.app-icon {
+    width:80px;
+    height:80px;
+    border-radius:18px;
+    box-shadow:0 6px 16px rgba(148,192,247,0.35);
+    object-fit:cover;
+}
+.splash-text {
+    color:#94C0F7;
+    font-size:20px;
+    margin-top:24px;
+    font-weight:bold;
+}
+
+.snow-float-wrap{
+    position:fixed;
+    z-index:999;
+    bottom:100px;
+    left:20px;
+    user-select:none;
+    -webkit-user-drag:none;
+    touch-action:none;
+}
+.snow-icon-btn{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.35);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(148,192,247,0.4);
+    color:#94C0F7;
+    font-size:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.snow-float-panel{
+    width:160px;
+    background:rgba(0,0,0,0.35);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(148,192,247,0.4);
+    border-radius:16px;
+    padding:12px;
+    margin-top:10px;
+    display:none;
+}
+
+.snow-float-panel.show{
+    display:block;
+}
+
+.float-title{
+    color:#94C0F7;
+    text-align:center;
+    font-size:14px;
+    padding-bottom:8px;
+    border-bottom:1px solid rgba(148,192,247,0.3);
+    margin-bottom:10px;
+    cursor:move;
+}
+
+.float-btn{
+    width:100%;
+    padding:8px;
+    margin:4px 0;
+    border-radius:8px;
+    border:none;
+    background:rgba(148,192,247,0.18);
+    color:#94C0F7;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.float-btn:hover{
+    background:rgba(148,192,247,0.3);
+}
+
+.title-main{
+    font-size:32px;
+    text-align:center;
+    color:#fff;
+    text-shadow:0 0 16px #c6e7ff,0 0 30px #86c6ff;
+    margin-bottom:16px;
+    letter-spacing:2px;
+}
+
+.num-box{
+    padding:26px 22px;
+    border-radius:16px;
+    margin-bottom:25px;
+    background:rgba(148,192,247,0.08);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(148,192,247,0.25);
+}
+.data-num{
+    font-size:26px;
+    color:#94C0F7;
+    font-weight:bold;
+    text-align:center;
+}
+
+.tip{
+    font-size:15px;
+    margin:15px 0;
+    text-align:center;
+    color:#94C0F7;
+}
+
+.progress{
+    background:rgba(148,192,247,0.12);
+    border-radius:8px;
+    height:24px;
+    width:100%;
+    margin:10px 0;
+    overflow:hidden;
+}
+.bar{
+    height:100%;
+    background:#94C0F7;
+    transition:0.3s;
+    width:0%;
+    border-radius:8px;
+}
+
+.btn-full{
+    width:100%;
+    padding:18px;
+    margin-bottom:14px;
+    border:none;
+    border-radius:12px;
+    background:rgba(148,192,247,0.22);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(148,192,247,0.4);
+    color:#94C0F7;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+.btn-full：悬停{
+背景：rgba(148，192，247，0.38)；
+box-shadow:0012px rgba(148,192,247,0.35);
+}
+.btn-reset{
+背景：rgba(148，192，247，0.12)；
+}
+
+.gen-title{
+文本对齐：居中；
+font-size:26px；
+字体粗细：粗体；
+底边距：24px；
+颜色：#94C0F7；
+}
+.gen-row{
+显示：柔性；
+gap:10px；
+底边距：15px；
+}
+.gen-输入{
+flex:1；
+填充：14px；
+边界半径：12px；
+背景：rgba(148，192，247，0.1)；
+边框：1px实体rgba(148,192,247,0.3);
+颜色：#94C0F7；
+字体大小：16px；
+文本对齐：居中；
+}
+.gen-result{
+最小高度：260px；
+最大高度：50vh；
+overflow-y：自动；
+填充：16px；
+边界半径：12px；
+    background:rgba(0,0,0,0.2);
+    border:1px solid rgba(148,192,247,0.25);
+    white-space:pre-line;
+    line-height:1.8;
+    word-break:break-all;
+    margin:15px 0;
+    color:#94C0F7;
+}
+
+.modal{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    display:none;
+    background:rgba(0,0,0,0.85);
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:999;
+}
+.modal-content{
+    padding:30px 24px;
+    border-radius:16px;
+    text-align:center;
+    width:100%;
+    max-width:320px;
+    background:#1e293b;
+    border:1px solid rgba(148,192,247,0.25);
+}
+.modal-content h3{
+    color:#94C0F7;
+    margin-bottom:10px;
+}
+.modal-desc{
+    margin:18px 0;
+    line-height:1.6;
+    color:#94C0F7;
+}
+
+.back-home-btn{
+    margin-bottom:20px;
+}
+
+.copyright{
+    text-align:center;
+    font-size:13px;
+    margin-top:30px;
+    color:#94C0F7;
+    opacity:0.75;
+}
+</style>
+</head>
+<body>
+
+<div class="splash-screen" id="splash">
+    <img class="app-icon" src="appicon.png" alt="数据号生成器">
+    <div class="splash-text">数据号生成器</div>
+</div>
+
+<div id="snowCanvas"></div>
+
+<div class="snow-float-wrap" id="floatWrap">
+    <div class="snow-icon-btn" id="iconBtn">❄️</div>
+    <div class="snow-float-panel" id="floatPanel">
+        <div class="float-title" id="dragBar">❄️ 雪景调节</div>
+        <button class="float-btn" id="windMin">微风</button>
+        <button class="float-btn" id="windMax">暴风雪</button>
+        <button class="float-btn" id="snowLess">减少雪花</button>
+        <button class="float-btn" id="snowMore">大雪纷飞</button>
+        <button class="float-btn" id="snowSwitch">关闭雪景</button>
+        <button class="float-btn" id="resetSnow">重置雪景</button>
+    </div>
+</div>
+
+
+<div class="home-page" id="homePage">
+    <div class="title-main">数据号生成器</div>
+
+    <div class="num-box">
+        <div class="data-num" id="showNum">先完成分享任务</div>
+    </div>
+
+    <div class="tip">
+        已分享：<span id="done">0</span> / 需分享10个不同的100人以上群聊
+    </div>
+    <div class="progress">
+        <div class="bar" id="bar"></div>
+    </div>
+
+    <button class="btn-full" id="buyBtn">🔥 购买链接</button>
+    <button class="btn-full" id="shareBtn">📤 点击领取数据号</button>
+    <button class="btn-full" id="genBtn">🎁 数据号生成</button>
+    <button class="btn-full btn-reset" id="resetBtn">🔄 重新分享</button>
+
+    <div class="copyright">©2026 国蜡  丨 此工具仅用于测试目的</div>
+</div>
+
+<div class="gen-panel" id="genPanel">
+    <button class="btn-full btn-reset back-home-btn" id="backHomeBtn">← 返回首页</button>
+    <div class="gen-title">数据号生成</div>
+    <div class="gen-row">
+        <input class="gen-input" id="genCount" type="number" min="1" max="20" value="1" placeholder="输入生成数量(1-20)">
+        <button class="btn-full" style="margin:0;flex:1" id="startGen">开始生成</button>
+    </div>
+    <div class="gen-result" id="genResult"></div>
+    <button class="btn-full" id="copyAll">复制全部内容</button>
+    <button class="btn-full btn-reset" id="clearRecord" style="margin-top:12px;">清空</button>
+
+    <div class="copyright">©2026 国蜡  丨 此工具仅用于测试目的</div>
+</div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h3>📢 系统提示</h3>
+        <p class="modal-desc">
+            检测到你还未分享，需分享到10个不同的100人以上QQ群<br>
+            即可领取数据号
+        </p>
+        <button class="btn-full" id="goShareBtn">✅ 打开QQ</button>
+    </div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+
+const homePage = document.getElementById('homePage');
+const genPanel = document.getElementById('genPanel');
+const genBtn = document.getElementById("genBtn");
+const backHomeBtn = document.getElementById("backHomeBtn");
+
+genBtn.addEventListener('click', () => {
+    homePage.classList.add('slide-left');
+    genPanel.classList.add('active');
+});
+backHomeBtn.addEventListener('click', () => {
+    homePage.classList.remove('slide-left');
+    genPanel.classList.remove('active');
+});
+
+const splash = document.getElementById('splash');
+if(sessionStorage.getItem('hasShowSplash')){
+    splash.style.display = 'none';
+}else{
+    sessionStorage.setItem('hasShowSplash', '1');
+    setTimeout(() => {
+        splash.classList.add('fade-out');
+        setTimeout(() => {
+            splash.style.display = 'none';
+        }, 600);
+    }, 800);
+}
+
+常数floatWrap=document.getElementById('FloatWrap');
+常量图标Btn=document.getElementById('iconBtn');
+常数floatPanel=document.getElementById('FloatPanel');
+常量dragBar=document.getElementById('dragBar');
+
+让panelOpen=false；
+iconBtn.addEventListener('click', ()=>{
+    panelOpen = !panelOpen;
+    floatPanel.classList.toggle('show', panelOpen);
+});
+
+let dragStartX, dragStartY;
+let wrapStartX, wrapStartY;
+let isDrag = false;
+
+function onDragStart(e){
+    e.preventDefault();
+    e.stopPropagation();
+    isDrag = true;
+    const touch = e.touches ? e.touches[0] : e;
+    dragStartX = touch.clientX;
+    dragStartY = touch.clientY;
+    const rect = floatWrap.getBoundingClientRect();
+    wrapStartX = rect.left;
+    wrapStartY = rect.top;
+    floatWrap.style.transition = 'none';
+}
+
+function onDragMove(e){
+    if(!isDrag) return;
+    e.preventDefault();
+    const touch = e.touches ? e.touches[0] : e;
+    const dx = touch.clientX - dragStartX;
+    const dy = touch.clientY - dragStartY;
+    floatWrap.style.left = (wrapStartX + dx) + 'px';
+    floatWrap.style.top = (wrapStartY + dy) + 'px';
+}
+
+function onDragEnd(){
+    isDrag = false;
+    floatWrap.style.transition = '0.1s ease';
+}
+
+dragBar.addEventListener('touchstart', onDragStart);
+document.addEventListener('touchmove', onDragMove);
+document.addEventListener('touchend', onDragEnd);
+dragBar.addEventListener('mousedown', onDragStart);
+document.addEventListener('mousemove', onDragMove);
+document.addEventListener('mouseup', onDragEnd);
+
+// Three.js 
+const container = document.getElementById('snowCanvas');
+const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true,
+    powerPreference: "default"
+});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050818);
+scene.fog = new THREE.FogExp2(0x070b20, 0.006);
+
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 400);
+camera.position.set(0, 12, 90);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.07;
+controls.minDistance = 25;
+controls.maxDistance = 160;
+controls.maxPolarAngle = Math.PI / 2 - 0.03;
+controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
+
+const ambientLight = new THREE.AmbientLight(0xc6e0ff, 0.45);
+scene.add(ambientLight);
+const moonLight = new THREE.DirectionalLight(0xe8f2ff, 0.75);
+moonLight.position.set(-30, 60, 20);
+scene.add(moonLight);
+
+const groundGeo = new THREE.PlaneGeometry(300, 300);
+groundGeo.rotateX(-Math.PI / 2);
+const groundMat = new THREE.MeshStandardMaterial({
+    color: 0xeef6ff,
+    roughness: 0.92,
+    metalness: 0,
+    transparent: true,
+    opacity: 0.75
+});
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.position.y = -45;
+scene.add(ground);
+
+const starCount = 600;
+const starGeo = new THREE.BufferGeometry();
+const starPos = new Float32Array(starCount * 3);
+for(let i=0;i<starCount;i++){
+    starPos[i*3] = (Math.random()-0.5)*300;
+    starPos[i*3+1] = Math.random()*140 + 20;
+    starPos[i*3+2] = (Math.random()-0.5)*300;
+}
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+const starMat=新的三点材质({颜色：0xFFFFFF，大小：0.6，透明：真，不透明度：0.7，大小衰减：真，深度写入：假});
+const stars=新的三个点(starGeo，starMat)；
+scene.add(stars)；
+
+让snowSwitch=true；
+让雪重=1600；
+let snowNear=450；
+风力=0.3；
+let farSnow，snowMeshArr=[];
+
+函数initFarSnow(){
+Const farGeo=new Three.BufferGeometry()；
+Const farPos=新的Float32Array(snowHeavy*3)；
+Const Farwind=new Float32Array(snowHeavy)；
+Const farSize=新的Float32Array(snowHeavy)；
+for(let i=0；i<snowHeavy；i++){
+Const idx=i*3；
+farPos[IDX]=(Math.random()-0.5)*160；
+farPos[idx+1]=Math.random()*110-40；
+farPos[IDX+2]=(Math.random()-0.5)*160；
+Farwind[我]=Math.random()*9999；
+farSize[我]=Math.random()*0.4+0.15；
+    }
+farGeo.setAttribute('位置'，新的Three.BufferAttribute(farPos，3))；
+farGeo.setAttribute('windSeed'，新的Three.BufferAttribute(Farwind，1))；
+farGeo.setAttribute('大小'，新的Three.BufferAttribute(farSize，1))；
+Const farmat=新三点材质({
+颜色：0xFFFFFF，大小：1.1，透明：真，不透明度：0.55，大小衰减：真，深度写入：假
+    });
+farSnow=新三点(farGeo，farmat)；
+scene.add(farSnow)；
+}
+
+函数createNearSnow(){
+snowMeshArr.forEach(m=>scene.remove(m))；
+    snowMeshArr.length = 0;
+    const snowGeo6 = new THREE.CircleGeometry(0.7, 6);
+    const snowMat6 = new THREE.MeshBasicMaterial({
+        color:0xffffff, transparent:true, opacity:0.82, side:THREE.DoubleSide
+    });
+    for(let i=0;i<snowNear;i++){
+        const mesh = new THREE.Mesh(snowGeo6, snowMat6.clone());
+        mesh.position.set(
+            (Math.random()-0.5)*100,
+            Math.random()*90 - 20,
+            (Math.random()-0.5)*100
+        );
+        mesh.userData = {
+            speed: Math.random()*0.06 + 0.03,
+            rotSpd: (Math.random()-0.5)*0.03,
+            windSeed: Math.random()*9999,
+            drift: Math.random()*0.4
+        };
+        snowMeshArr.push(mesh);
+scene.add(网格)；
+    }
+}
+
+initFarSnow()；
+createNearSnow()；
+
+Const clock=new THREE.Clock()；
+函数RenderLoop(){
+requestAnimationFrame(RenderLoop)；
+常数时间=clock.getElapsedTime()；
+controls.update()；
+
+if(snowSwitch){
+Const farPosAttr=farSnow.geometry.attributes.position；
+Const farArr=farPosAttr.array；
+for(let i=0；i<snowHeavy；i++){
+Const i3=i*3；
+Const seed=farSnow.geometry.attributes.windSeed.array[我];
+farArr[i3+1]-=风力*0.12；
+Const wave1=Math.sin(时间*0.7+种子)*风力*0.12；
+Const wave2=Math.cos(时间*1.1+种子*0.5)*风力*0.06；
+farArr[i3]+=wave1+wave2；
+farArr[i3+2]+=Math.sin(时间*0.4+种子*0.7)*风力*0.04；
+if(farArr[i3+1]< -48){
+farArr[i3+1]= 100;
+farArr[i3]=(Math.random()-0.5)*160；
+farArr[i3+2]=(Math.random()-0.5)*160；
+            }
+        }
+farPosAttr.needsUpdate=true；
+farSnow.visible=true；
+
+sowMeshArr.forEach(网格=>{
+mesh.visible=真；
+Const ud=mesh.userData；
+mesh.position.y-=ud.speed*Wind power；
+Const w1=Math.sin(时间*0.9+ud.windSeed)*ud.漂移*风力；
+Const w2=数学cos(时间*1.3+ud.windSeed*0.6)*ud.漂移*风力*0.5；
+            mesh.position.x += w1;
+            mesh.position.z += w2;
+            mesh.rotation.z += ud.rotSpd;
+            if(mesh.position.y < -48){
+                mesh.position.y = 95;
+                mesh.position.x = (Math.random()-0.5)*100;
+                mesh.position.z = (Math.random()-0.5)*100;
+            }
+        });
+    }else{
+        farSnow.visible = false;
+        snowMeshArr.forEach(m=>m.visible=false);
+    }
+
+    renderer.render(scene, camera);
+}
+renderLoop();
+
+window.addEventListener('resize',()=>{
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+document.getElementById('windMin').onclick = ()=> windPower = 0.12;
+document.getElementById('windMax').onclick = ()=> windPower = 0.9;
+document.getElementById('snowLess').onclick = ()=>{
+    snowHeavy = 800;
+snowNear=200；
+scene.remove(farSnow)；
+initFarSnow()；
+createNearSnow()；
+};
+document.getElementById('snowMore').onclick=()=>{
+snowHeavy=2200；
+snowNear=600；
+scene.remove(farSnow)；
+initFarSnow()；
+createNearSnow()；
+};
+document.getElementById('snowSwitch').onclick=函数(){
+snowSwitch=！snowSwitch；
+this.innerText=snowSwitch？"关闭雪景" : "开启雪景";
+};
+document.getElementById('resetSnow').onclick=()=>{
+风力=0.3；
+snowSwitch=true；
+camera.position.set(0，12，90)；
+controls.reset()；
+scene.remove(farSnow)；
+initFarSnow()；
+createNearSnow()；
+};
+
+常量shareText='🔥↓↓和平免费数据号！↓🔥
+
+     ↓超高质量！进群免费送！↓
+ 
+     🌱不易鉴权、快速上号🌿
+    
+     ☘️畅快爽玩、无需担忧🍀
+   
+     🌴超高质量、先到先得🌿
+   
+     🍃限时限量、稳定连打🍃
+
+🔥  无人脸！无隔离！无高风险！
+群10437773
+
+🔥   进群免费拿980686275   🔥
+二群1043777306火速🔥
+三群883604254
+
+ ↑↑支持多种上号器上号！↑↑
+一一一一一一一一一一一一一一
+
+🌱↑↑任你选择，随心所欲↑↑🌱
+
+
+1043777306  1043777306
+1043777306  1043777306
+1043777306  1043777306
+
+
+免费数据号@TGUOLAYLW
+
+👉       数据号生成器下载链接（密码123）：
+http://b-bu.cn/b01d71d5fc'；
+
+让需要=10；
+设doneNum=0；
+
+函数updateui(){
+document.getElementById("已完成").inertext=doneNum；
+设PCT=(doneNum/需要)*100；
+document.getElementById("条形图").style.width=pct+"%"；
+}
+
+函数resetAll(){{
+doneNum=0；
+updateUI()；
+文件。getElementById("showNum")。内部文本="先完成分享任务"；"showNum").innerText="先完成分享任务"；
+}
+updateUI()；
+
+文件。getElementById("buyBtn").onClick=函数(){"buyBtn")。onClick=函数(){
+location.href="https://link3.cc/guola"；"https://link3.cc/guola"；
+};
+
+文件。getElementById("shareBtn")。onclick=函数(){"shareBtn").onclick=函数(){"shareBtn").onclick=函数(){"shareBtn").onclick=函数(){
+文件。getElementById(“模态”)。风格。显示="弹性"；"模态").style.display="弹性"；"弹性"；"模态").style.display="弹性"；
+};
+文件。getElementById("goShareBtn")。onclick=函数(){"goShareBtn").onclick=函数(){"goShareBtn").onclick=函数(){"goShareBtn").onclick=函数(){
+文件。getElementById("模态")。风格。显="无"；"模态").style.display="无"；"模态")。风格。显示="无"；"模态").style.display="无"；
+常量文本区域=document.createElement("文本区域")；"文本区域")；"文本区域")；"文本区域")；
+textarea.value=shareText；
+textaria.style.position="固定"；"固定"；"固定"；"固定"；
+textarea.style.opacity="0"；"0"；"0"；
+document.body.appendChild(textarea)；
+textarea.select()；
+document.execCommand("复制")；"复制")；"复制")；"复制")；
+document.body.removeChild(textarea)；
+
+setTimeout(()=>{{{{
+位置。href="mqq://"；"mqq://"；"mqq://"；"mqq://"；
+}, 800);}, 800);, 800);}, 800);
+setTimeout(()=>{{{{
+if(doneNum<需要){{{{
+doneNum++；
+updateUI()；
+if(doneNum>=需要){{
+警惕的("❌ 分享任务异常，请重新分享10个不同的100人以上群聊！");"❌ 分享任务异常，请重新分享10个不同的100人以上群聊！");
+resetAll()；
+      }
+    }
+}，2800)；让singleText=createAccount()+文件。getElementById(
+;}
+文件。getElementById("resetBtn")。onClick=函数()namestr+=rand(1，9)；"resetBtn")。onClick=函数()namestr+=rand(1，9)；
+"✅ 已重置，请重新开始分享任务"
+resetAll()；{)；{)；{)；{)；
+};
+
+函数rand(最小，最大){{{{{{{
+返回Math.floor(Math.random()*(max-min+1))+min；
+}
+函数randArr(arr){{{{
+返回arr[Rand(0，arr.长度-1)]；[Rand(0，arr.长度-1)]；[Rand(0，arr.长度-1)]；[Rand(0，arr.长度-1)]；
+}
+
+
+const usedNameSet=新集()；
+
+常数CharPool=[[[[
+"婲","玛","玥","珩","珞","宁","晞","绾","鸢","泠","柒","槿","砚","纾","昀","岑","芃","茉",, "玛", "玥","珩","珞","宁","晞","绾","鸢","泠","柒","槿","砚","纾","昀","岑","芃","茉",,"玛", "玥","珩","珞","宁","晞","绾","鸢","泠","柒","槿","砚","纾","昀","岑","芃","茉",, "玛", "玥", "珩","珞","宁","晞","绾","鸢","泠","柒","槿","砚","纾","昀","岑","芃","茉",
+"岚","澈","暮","辞","屿","笙","沐","柠","筱","霏","楹","诺","芮","昭","絮","忱",,"澈","暮", "辞", "屿","笙","沐","柠","筱","霏","楹","诺","芮","昭","絮","忱",,"澈","暮","辞","屿","笙", "沐","柠","筱","霏","楹","诺","芮","昭","絮","忱",,"澈","暮", "辞", "屿","笙","沐","柠","筱", "霏","楹","诺","芮","昭","絮","忱",
+"卿","檀","绯","攸","芷","葭","霁","杳","宸","荞","茴","绾","姒","祎","琬","妤",,"檀","绯", "攸", "芷","葭","霁","杳","宸","荞","茴","绾","姒","祎","琬","妤",,"檀","绯","攸","芷","葭", "霁","杳","宸","荞","茴","绾","姒","祎","琬","妤",,"檀","绯", "攸", "芷","葭","霁","杳","宸", "荞","茴","绾","姒","祎","琬","妤",
+"荞"，"荏"，"苒"，"笙"，"箫"，"砚"，"阡"，"陌"，"攸"，"泠"，"潋"，"漪"，"霏"，"霂"，"昉"，"旸"，"荏"，"苒"，"笙"，"箫"，"砚"，"阡"，"陌"，"攸"，"泠"，"潋"，"漪"，"霏"，"霂"，"昉"，"旸"，让singleText=createAccount()+，"苒"，"笙"，"箫"，"砚"，"阡"，"陌"，"攸"，"泠"，"潋"，"漪"，"霏"，"霂"，"昉"，"旸"，"荏"，"苒"，"笙"，"箫"，"砚"，"阡"，"陌"，"攸"，"泠"，"潋"，"漪"，"霏"，"霂"，"昉"，"旸"，"荏"，"苒"，"笙"，"箫"，"砚"，"阡"，"陌"，"攸"，"泠"，"潋"，"漪"，"霏"，"霂"，"昉"，"旸"，"荏"，"苒"，"笙"，"箫"，"砚"，"阡"，"陌"，"攸"，"泠"，"潋"，"漪"，"霏"，"霂"，"昉"，"旸"，让singleText=createAccount()+，"苒"，"笙"，"箫"，"砚"，"阡"，"陌"，"攸"，"泠"，"潋"，"漪"，"霏"，"霂"，"昉"，"旸"，"荏"，"苒"，"笙"，"箫"，"砚"，"阡"，"陌"，"攸"，"泠"，"潋","漪","霏","霂","昉","旸"
+];;
+
+
+函数createUniqueNick(){{{{{{{{{
+让尼克；
+while(true){{{{{{{{{{{{{
+Const CHARLEN=rand(2，6)；
+让namestr=""；""；""；""；""；""；""；""；
+for(设i=0；i<CHARLEN；i++){{{{{{{{
+namestr+=randArr(CharPool)；
+        }
+if(rand(1，10)<=3){{{{{{{{
+,2800); 2800);2800); 2800);2800); 2800);2800); 2800);2800); 2800);2800); 2800);2800); 2800);2800); 2800);
+        }
+Nick=namestr；
+如果(！usedNameSet.has(nick)){{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+usedNameSet.add(nick)；
+打破；
+        }
+    }
+返回缺口；
+}
+
+
+函数getRandomToken(){{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+常量字符="0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQR STUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMN OPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJ KLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；"0123456789BCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUV WXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEF G HIJKLMNOPQRSTUVWXYZabcdef"；"0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；
+让标记=""；""；""；""；""；""；""；""；""；""；""；""；""；""；""；""；
+for(让i=0；i<32；i++)token+=chars[Rand(0，字符.长度-1)[Rand(0，字符.长度-1)]；[Rand(0，字符.长度-1)[Rand(0，字符.长度-1)]；[Rand(0，字符.长度-1)[Rand(0，字符.长度-1)]；[Rand(0，字符.长度-1)[Rand(0，字符.长度-1)]；[Rand(0，字符.长度-1)[Rand(0，字符.长度-1)]；[Rand(0，字符.长度-1)[Rand(0，字符.长度-1)]；[Rand(0，字符.长度-1)[Rand(0，字符.长度-1)]；[Rand(0，字符.长度-1)[Rand(0，字符.长度-1)]；
+返回令牌；
+}
+
+函数createaccount(){{{{{{{{{{
+设昵称=createUniqueNick()；
+let level=rand(20，75)；
+让rankNum=rand(600，5000)；
+设markCount=rand(1，22)；
+让在线状态=rand(0，1)===1？"是"："否"；"是"："否"；"是"："否"；"是"："否"；"是"："否"；"是"："否"；"是"："否"；"是"："否"；
+让hotValue=rand(1000，80000)；
+
+出租日=字符串(rand(1，20)).padStart(2，"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；
+让小时=字符串(rand(0，23)).padStart(2，"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；
+让分钟=字符串(rand(0，59)).padStart(2，"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；
+设second=String(rand(0，59)).padStart(2，"0")；startGenBtn。inertext=)；"0")；startGenBtn。inertext=)；"0")；startGenBtn。inertext=)；"0")；startGenBtn.inertext=)；"0")；startGenBtn.inertext=)；"0")；startGenBtn.inertext=)；"0")；startGenBtn。inertext=)；"0")；startGenBtn.inertext=)；
+设gapHour=rand(1，50)；
+让loginTime='2026-07-${一天}_${小时}：${分钟}：${第二}(${gapHour}小时)‘；'2026-07-${一天}_${小时}：${分钟}：${第二}(${gapHour}小时)‘；'2026-07-${一天}_${小时}：${分钟}：${第二}(${gapHour}小时)‘；'2026-07-${一天}_${小时}：${分钟}：${第二}(${gapHour}小时)‘；'2026-07-${一天}_${小时}：${分钟}：${第二}(${gapHour}小时)‘；'2026-07-${一天}_${小时}：${分钟}：${第二}(${gapHour}小时)‘；'2026-07-${一天}_${小时}：${分钟}：${第二}(${gapHour}小时)‘；'2026-07-${一天}_${小时}：${分钟}：${第二}(${gapHour}小时)‘；
+
+令token=getRandomToken().substring(0，28)；
+设OpenID=getRandomToken()；
+让payToken=token；
+Const expiretime=7776000；
+
+返回'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${loginTime}---正常_access_token=${令牌}&expires_in=${expiresstime}&openid=${OpenID}&pay_token=${payToken}&'；'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${loginTime}---正常_access_token=${令牌}&expires_in=${expiresstime}&openid=${OpenID}&pay_token=${payToken}&'；'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${logi'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${loginTime}---正常_access_token=${令牌}&expires_in=${expiresstime}&openid=${OpenID}&pay_token=${payToken}&'；'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${loginTime}---正常_access_token=${令牌}&expires_in=${expiresstime}&openid=${OpenID}&pay_token=${payToken}&'；nTime}--正常_access_token=${令牌}&expires_in=${expiresstime}&openid=${OpenID}&pay_token=${payToken}&'；'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${loginTime}---正常_access_token=${令牌}&expires_in=${expiresstime}&openid=${OpenID}&pay_token=${payToken}&'；；'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${loginTime}---正常_access_token=${令牌}&expires_in=${expiresstime}&openid=${OpenID}&pay_token=${payToken}&'；
+}
+
+异步函数类型追加(元素，文本，速度=15){{{{{{{{
+for(让i=0；i<text.length；i++){{{{{{{
+element.innerText+=text[我]；[我]；[我]；[我]；[我]；[我]；[我]；[我]；
+element.scrollTop=element.scrollHeight；
+等待新的承诺(res=>setTimeout(res，speed))；
+    }
+}
+
+让总GenContent=""；""；""；""；""；""；""；""；
+常数startGenBtn=document.getElementById("startGen")；"startGen")；"startGen")；"startGen")；"startGen")；"startGen")；"startGen")；
+ConstgenResultBox=文档。getElementById("genResult")；"genResult")；"genResult")；"genResult")；"genResult")；"genResult")；"genResult")；"genResult")；
+常量genCountInput=document.getElementById("genCount")；"genCount")；"genCount")；"genCount")；"genCount")；"genCount")；
+Const copyAllBtn=文档.getElementById("Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；"Copyall")；
+Const clearRecordBtn=document.getElementById("clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；"clearRecord")；
+让genRunning=false；
+设isStopGen=false；
+
+startGenBtn.onclick=异步函数(){{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+   
+if(genRunning){{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+isStopGen=true；
+返回；
+    }
+
+让count=parseInt(genCountInput.value)；
+if(isNaN(count)||count<1||count>20){{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+警惕的("请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间"); "请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间") ;"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间") ;"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间") ;"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");"请输入1~20之间") ;"请输入1~20之间");"请输入1~20之间");"请输入1~20之间");
+让分钟=字符串(rand(0，59)).padStart(2，"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；"0")；
+    }
+
+   
+genRunning=true；
+isStopGen=false；
+startGenBtn.innerText="停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；"停止生成"；
+startGenBtn.disabled=false；
+
+for(设i=1；i<=计数；我++){{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+       
+如果(isStopGen)断裂；
+
+让singleText=createAccount()+"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；“\n\n”；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；"\n\n"；
+await typeAppend(genResultBox，singleText，15)；
+总GenContent+=单文本；
+    }
+
+   
+genRunning=false；
+isStopGen=false；
+startGenBtn.innerText="开始生成"；"开始生成"；
+};
+
+copyAllBtn.onclick=异步函数(){
+if(！totalGenContent){
+警惕的("暂无生成内容！");
+返回；
+    }
+尝试{
+等候领航员。剪贴板。WRITETEXT(总GenContent)；
+警惕的("✅ 复制成功！")；
+}捕获(错误){
+警惕的("浏览器权限限制，请手动选中复制");
+    }
+};
+
+
+clearRecordBtn.onclick=函数(){
+genRunning=false；
+isStopGen=false；
+genResultBox.innerText=""；
+总GenContent=""；
+usedNameSet.clear()；
+startGenBtn.innerText="开始生成"；
+startGenBtn.disabled=false；
+};
+
+</script>
+</body>
+</html>
