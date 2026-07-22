@@ -696,213 +696,213 @@ const shareTxt = `🔥↓↓和平免费数据号！↓🔥
 🌱↑↑任你选择，随心所欲↑↑🌱
 
 
-      1043777306  1043777306
-      1043777306  1043777306
-      1043777306  1043777306
+1043777306  1043777306
+1043777306  1043777306
+1043777306  1043777306
 
 
 免费数据号@TGUOLAYLW
 
-👉 数据号生成器下载链接（密码123）：
-http://b-bu.cn/b01d71d5fc`;
+👉  数据号生成器下载链接（密码123）：
+http://b-bu.cn/b01d71d5fc';
 
-let need = 10;
-let doneNum = 0;
+让 需要=10;
+让 doneNum=0;
 
-function updateUI(){
-  document.getElementById("done").innerText = doneNum;
-  let pct = (doneNum / need) * 100;
-  document.getElementById("bar").style.width = pct + "%";
+功能 updateUI(){
+  文件.getElementById("已完成").内部文本=doneNum;
+  让 PCT=(doneNum / 需要) * 100;
+  文件.getElementById("条形图").风格.宽度=PCT+"%";
 }
 
-function resetAll(){
-  doneNum = 0;
+功能 resetAll(){
+  doneNum=0;
   updateUI();
-  document.getElementById("showNum").innerText = "先完成分享任务";
+  文件.getElementById("showNum").内部文本="先完成分享任务";
 }
 updateUI();
 
-document.getElementById("buyBtn").onclick = function(){
-  location.href = "https://link3.cc/guola";
+文件.getElementById("buyBtn")。onclick=功能(){
+位置.href="https://link3.cc/guola"；
 };
 
-document.getElementById("shareBtn").onclick = function(){
-  document.getElementById("modal").style.display = "flex";
+document.getElementById("shareBtn")。onclick=函数(){
+文件。getElementById(“模态”)。风格。显示="flex"；
 };
-document.getElementById("goShareBtn").onclick = function(){
-  document.getElementById("modal").style.display = "none";
-  const textarea = document.createElement("textarea");
-  textarea.value = shareTxt;
-  textarea.style.position = "fixed";
-  textarea.style.opacity = "0";
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textarea);
+文件。getElementById("goShareBtn")。onclick=函数(){
+文件。getElementById(“模态”)。风格。显示="无"；
+Const textarea=document.createElement("textarea")；
+textarea.value=shareText；
+textarea.style.position="固定"；
+textarea.style.opacity="0"；
+document.body.appendChild(textarea)；
+textarea.select()；
+document.execCommand(“副本”)；
+document.body.removeChild(textarea)；
 
-  setTimeout(()=>{
-    location.href = "mqq://";
-  }, 800);
-  setTimeout(()=>{
-    if(doneNum < need){
-      doneNum++;
-      updateUI();
-      if(doneNum >= need){
+setTimeout(()=>{
+location.href="mqq://"；
+}, 800);
+setTimeout(()=>{
+if(doneNum<需要){
+doneNum++；
+updateUI()；
+if(doneNum>=需要){
         alert("❌ 分享任务异常，请重新分享10个不同的100人以上群聊！");
-        resetAll();
+resetAll()；
       }
     }
-  }, 2800);
+}, 2800);
 };
-document.getElementById("resetBtn").onclick = function(){
-  resetAll();
-  alert("✅ 已重置，请重新开始分享任务");
+document.getElementById("resetBtn")。onclick=函数(){
+resetAll()；
+警惕的("✅ 已重置，请重新开始分享任务")；
 };
 
-function rand(min,max){
-    return Math.floor(Math.random()*(max-min+1))+min;
+函数Rand(最小，最大){
+返回Math.floor(Math.random()*(max-min+1))+min；
 }
-function randArr(arr){
-    return arr[rand(0,arr.length-1)];
+函数randArr(arr){
+return arr[rand(0，arr.length-1)]；
 }
 
 
-const usedNameSet = new Set();
+const usedNameSet=新集()；
 
-const charPool = [
-    "婲","瑪","玥","珩","珞","甯","晞","绾","鸢","泠","柒","槿","砚","纾","昀","岑","芃","茉",
-    "岚","澈","暮","辞","屿","笙","沐","柠","筱","霏","楹","诺","芮","昭","絮","忱",
-    "卿","檀","绯","攸","芷","葭","霁","杳","宸","荞","茴","绾","姒","祎","琬","妤",
-    "荞","荏","苒","笙","箫","砚","阡","陌","攸","泠","潋","漪","霏","霂","昉","旸"
+常数CharPool=[
+"婲","玛","玥","珩","珞","宁","晞","绾","鸢","泠","柒","槿","砚","纾","昀","岑","芃","茉",
+"岚","澈","暮","辞","屿","笙","沐","柠","筱","霏","楹","诺","芮","昭","絮","忱",
+"卿","檀","绯","攸","芷","葭","霁","杳","宸","荞","茴","绾","姒","祎","琬","妤",
+"荞","荏","苒","笙","箫","砚","阡","陌","攸","泠","潋","漪","霏","霂","昉","旸"
 ];
 
 
-function createUniqueNick(){
-    let nick;
-    while(true){
-        const charLen = rand(2,6);
-        let nameStr = "";
-        for(let i=0;i<charLen;i++){
-            nameStr += randArr(charPool);
+函数createUniqueNick(){
+让尼克；
+while(true){
+Const CHARLEN=rand(2，6)；
+设namestr=""；
+for(设i=0；i<CHARLEN；i++){
+namestr+=randArr(CharPool)；
         }
-        if(rand(1,10) <= 3){
-            nameStr += rand(1,9);
+if(rand(1，10)<=3){
+namestr+=rand(1，9)；
         }
-        nick = nameStr;
-        if(!usedNameSet.has(nick)){
-            usedNameSet.add(nick);
-            break;
+Nick=namestr；
+if(！usedNameSet.has(nick)){
+usedNameSet.add(nick)；
+打破；
         }
     }
-    return nick;
+返回缺口；
 }
 
 
-function getRandomToken(){
-    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef";
-    let token = "";
-    for(let i=0;i<32;i++) token += chars[rand(0,chars.length-1)];
-    return token;
+函数getRandomToken(){
+Const chars="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef"；
+让令牌=""；
+for(让i=0；i<32；i++)token+=chars[rand(0，chars.length-1)]；
+返回令牌；
 }
 
-function createAccount(){
-    let nickName = createUniqueNick();
-    let level = rand(20,75);
-    let rankNum = rand(600,5000);
-    let markCount = rand(1,22);
-    let onlineState = rand(0,1) === 1 ? "是" : "否";
-    let hotValue = rand(1000,80000);
+函数createaccount(){
+设昵称=createUniqueNick()；
+let level=rand(20，75)；
+让rankNum=rand(600，5000)；
+设markCount=rand(1，22)；
+设onlineState=rand(0，1)===1？"是"："否"；
+让hotValue=rand(1000，80000)；
 
-    let day = String(rand(1,20)).padStart(2,"0");
-    let hour = String(rand(0,23)).padStart(2,"0");
-    let minute = String(rand(0,59)).padStart(2,"0");
-    let second = String(rand(0,59)).padStart(2,"0");
-    let gapHour = rand(1,50);
-    let loginTime = `2026-07-${day}_${hour}:${minute}:${second}(${gapHour}小时)`;
+let day=String(rand(1，20)).padStart(2，"0")；
+让小时=字符串(rand(0，23)).padStart(2，"0")；
+让分钟=字符串(rand(0，59)).padStart(2，"0")；
+设second=String(rand(0，59)).padStart(2，"0")；
+设gapHour=rand(1，50)；
+让loginTime='2026-07-${一天}_${小时}:${分钟}:${第二}(${gapHour}小时)`;
 
-    let token = getRandomToken().substring(0,28);
-    let openId = getRandomToken();
-    let payToken = token;
-    const expireTime = 7776000;
+令令牌=让hotValue让hotValue=兰德(1000，80000)；rand(1000，80000)；().子字串(0，28)；
+设OpenID=getRandomToken()；
+让payToken=token；
+Constexpiretime=7776000；
 
-    return `名字:${nickName}---等级:${level}---段位:${rankNum}---历史印记:${markCount}---在线状态:${onlineState}---热力值:${hotValue}---上次登录时间:${loginTime}---正常_access_token=${token}&expires_in=${expireTime}&openid=${openId}&pay_token=${payToken}&`;
+返回'名字：${昵称}---等级：${水平}---段位：${rankNum}--历史印记：${markCount}---在线状态：${在线状态}---热力值：${hotValue}---上次登录时间：${loginTime}---正常_access_token=${令牌}&到期日(_I)=${expiredtime}OpenID(&O)=${OpenID}&pay_token=${payToken}&'；
 }
 
-async function typeAppend(element, text, speed = 15){
-    for(let i=0; i<text.length; i++){
-        element.innerText += text[i];
-        element.scrollTop = element.scrollHeight;
-        await new Promise(res=>setTimeout(res,speed));
+异步异步函数typeAppend(元素，文本，速度=15){typeAppend(元素，文本，速度=15){
+为(让我=0; 我<文本.长度; 我++){
+        元素.内部文本+=文本[我];
+元素.卷盖=元素.scrollHeight；
+等候新的承诺(res=>setTimeout(res，速度))；
     }
 }
 
-let totalGenContent = "";
-const startGenBtn = document.getElementById("startGen");
-const genResultBox = document.getElementById("genResult");
-const genCountInput = document.getElementById("genCount");
-const copyAllBtn = document.getElementById("copyAll");
-const clearRecordBtn = document.getElementById("clearRecord");
-let genRunning = false;
-let isStopGen = false;
+让totalGenContent=""；
+ConstartGenBtn=文件.getElementById("startGen")；
+ConstgenResultBox=文件.getElementById("genResult")；
+ConstgenCountInput=文件.getElementById("genCount")；
+constcopyallbtn=文本.getElementById("copyAll")；
+ConstclearRecordBtn=文件.getElementById("clearRecord")；
+让genRunning=假的；
+让isStopGen=假的；
 
-startGenBtn.onclick = async function(){
+startGenBtn.onClick=异步功能(){
    
-    if(genRunning){
-        isStopGen = true;
-        return;
+如果(genRunning){
+isStopGen=正确；
+        返回;
     }
 
-    let count = parseInt(genCountInput.value);
-    if(isNaN(count) || count<1 || count>20){
-        alert("请输入1~20之间");
-        return;
+让数数=parseInt(genCountInput.价值)；
+如果(isNaN(数数)||数数<1||数数>20){
+警惕的("请输入1~20之间");
+        返回;
     }
 
    
-    genRunning = true;
-    isStopGen = false;
-    startGenBtn.innerText = "停止生成";
-    startGenBtn.disabled = false;
+genrunning=正确；
+isStopGen=假的；
+startGenBtn.内部文本="停止生成"；
+startGenBtn.禁用=假的；
 
-    for(let i=1; i<=count; i++){
+为(让我=1; 我<=数数; 我++){
        
-        if(isStopGen) break;
+如果(isStopGen)打破；
 
-        let singleText = createAccount() + "\n\n";
-        await typeAppend(genResultBox, singleText, 15);
-        totalGenContent += singleText;
+让singleText=createaccount()+"\n\n";
+等候typeAppend(genResultBox，singleText，15)；
+totalGenContent+=单文本；
     }
 
    
-    genRunning = false;
-    isStopGen = false;
-    startGenBtn.innerText = "开始生成";
+genRunning=假的；
+isStopGen=假的；
+startGenBtn.内部文本="开始生成"；
 };
 
-copyAllBtn.onclick = async function(){
-    if(!totalGenContent){
-        alert("暂无生成内容！");
-        return;
+copyAllBtn.onClick=异步功能(){
+如果(！totalGenContent){
+        警惕的("暂无生成内容！");
+        返回;
     }
-    try{
-        await navigator.clipboard.writeText(totalGenContent);
-        alert("✅ 复制成功！");
-    }catch(err){
-        alert("浏览器权限限制，请手动选中复制");
+尝试{
+等候区飞行员剪贴板.WRITETEXT(totalGenContent)；
+警惕的("✅ 复制成功！")；
+}赶上(犯错){
+        警惕的("浏览器权限限制，请手动选中复制");
     }
 };
 
 
-clearRecordBtn.onclick = function(){
-    genRunning = false;
-    isStopGen = false;
-    genResultBox.innerText = "";
-    totalGenContent = "";
-    usedNameSet.clear();
-    startGenBtn.innerText = "开始生成";
-    startGenBtn.disabled = false;
+clearRecordBtn.onClick=功能(){
+genRunning=假的；
+isStopGen=假的；
+genResultBox。内部文本=""；
+totalGenContent=""；
+usedNameSet。清楚的()；
+startGenBtn.内部文本="开始生成"；
+startGenBtn.禁用=假的；
 };
 
-</script>
-</body>
-</html>
+</剧本>
+</身体>
+<
